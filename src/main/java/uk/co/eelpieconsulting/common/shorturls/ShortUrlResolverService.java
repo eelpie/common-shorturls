@@ -2,13 +2,13 @@ package uk.co.eelpieconsulting.common.shorturls;
 
 import org.apache.log4j.Logger;
 
-public class UrlResolverService {
+public class ShortUrlResolverService {
 
-	private final static Logger log = Logger.getLogger(UrlResolverService.class);
+	private final static Logger log = Logger.getLogger(ShortUrlResolverService.class);
 
 	protected RedirectingUrlResolver[] redirectResolvers;
 
-	public UrlResolverService(RedirectingUrlResolver... redirectResolvers) {
+	public ShortUrlResolverService(RedirectingUrlResolver... redirectResolvers) {
 		this.redirectResolvers = redirectResolvers;
 	}
 	
