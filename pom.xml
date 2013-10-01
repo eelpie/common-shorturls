@@ -5,7 +5,7 @@
 	<artifactId>common-shorturls</artifactId>
 	<packaging>jar</packaging>
 	<name>Common short urls</name>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<description>Resolving nested short urls</description>
 			
 	<build>
@@ -41,11 +41,11 @@
 			<version>4.8.2</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.httpcomponents</groupId>
-			<artifactId>httpclient</artifactId>
-			<version>4.1.2</version>
-		</dependency>
+                <dependency>
+                        <groupId>org.apache.httpcomponents</groupId>
+                        <artifactId>httpclient</artifactId>
+                        <version>4.2.5</version>
+                </dependency>
 		
 		<dependency>
 			<groupId>log4j</groupId>
