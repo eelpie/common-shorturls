@@ -7,6 +7,12 @@
 	<name>Common short urls</name>
 	<version>1.0.1</version>
 	<description>Resolving nested short urls</description>
+
+  	<parent>
+                <groupId>uk.co.eelpieconsulting</groupId>
+                <artifactId>eelpie-parent</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+        </parent>
 			
 	<build>
 		<plugins>
