@@ -19,7 +19,15 @@ public abstract class AbstractRedirectResolver implements RedirectingUrlResolver
     private static final String LOCATION = "Location";
     private static final int HTTP_TIMEOUT = 10000;
 
-    public abstract boolean isValid(String url);
+    private final String urlPrefix;
+
+    protected AbstractRedirectResolver(String urlPrefix) {
+        this.urlPrefix = urlPrefix;
+    }
+
+    public boolean isValid(String url) {
+        return url != null && url.startsWith(urlPrefix);
+    }
 
     public String resolveUrl(String url) {
         if (url != null && isValid(url)) {
