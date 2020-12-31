@@ -5,8 +5,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import uk.co.eelpieconsulting.common.shorturls.FeedBurnerRedirectResolver;
-import uk.co.eelpieconsulting.common.shorturls.ShortUrlResolverService;
+import uk.co.eelpieconsulting.common.shorturls.resolvers.FeedBurnerRedirectResolver;
 
 public class ShortUrlResolverServiceTest {
 

@@ -1,4 +1,4 @@
-package uk.co.eelpieconsulting.common.shorturls;
+package uk.co.eelpieconsulting.common.shorturls.resolvers;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -12,16 +12,16 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.net.URLDecoder;
 
-public abstract class AbstractRedirectResolver implements RedirectingUrlResolver {
+public abstract class RedirectingUrlResolver {
 
-    private final static Logger log = LogManager.getLogger(AbstractRedirectResolver.class);
+    private final static Logger log = LogManager.getLogger(RedirectingUrlResolver.class);
 
     private static final String LOCATION = "Location";
     private static final int HTTP_TIMEOUT = 10000;
 
     private final String urlPrefix;
 
-    protected AbstractRedirectResolver(String urlPrefix) {
+    protected RedirectingUrlResolver(String urlPrefix) {
         this.urlPrefix = urlPrefix;
     }
 

@@ -1,8 +1,8 @@
 package uk.co.eelpieconsulting.common.shorturls;
 
-import uk.co.eelpieconsulting.common.shorturls.FeedBurnerRedirectResolver;
-import uk.co.eelpieconsulting.common.shorturls.RedirectingUrlResolver;
+import uk.co.eelpieconsulting.common.shorturls.resolvers.FeedBurnerRedirectResolver;
 import junit.framework.TestCase;
+import uk.co.eelpieconsulting.common.shorturls.resolvers.RedirectingUrlResolver;
 
 public class FeedBurnerRedirectResolverServiceTest extends TestCase {
 

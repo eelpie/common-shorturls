@@ -2,6 +2,7 @@ package uk.co.eelpieconsulting.common.shorturls;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.co.eelpieconsulting.common.shorturls.resolvers.RedirectingUrlResolver;
 
 public class ShortUrlResolverService {
 
