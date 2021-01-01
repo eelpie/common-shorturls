@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import uk.co.eelpieconsulting.common.shorturls.ShortUrlResolver;
 
 import java.io.IOException;
+import java.net.URL;
 import java.net.URLDecoder;
 
 public abstract class RedirectingUrlResolver implements ShortUrlResolver {
@@ -26,20 +27,22 @@ public abstract class RedirectingUrlResolver implements ShortUrlResolver {
         this.urlPrefix = urlPrefix;
     }
 
-    public boolean isValid(String url) {
-        return url != null && url.startsWith(urlPrefix);
+    @Override
+    public boolean isValid(URL url) {
+        return url != null && url.toExternalForm().startsWith(urlPrefix);
     }
 
-    public String resolveUrl(String url) {
+    @Override
+    public URL resolveUrl(URL url) {
         if (url != null && isValid(url)) {
             log.info("Resolving url: " + url);
 
             final HttpClient client = new DefaultHttpClient();
-            client.getParams().setParameter("http.socket.timeout", new Integer(HTTP_TIMEOUT));
+            client.getParams().setParameter("http.socket.timeout", HTTP_TIMEOUT);
             client.getParams().setParameter("http.protocol.handle-redirects", false);
 
             try {
-                final HttpHead head = new HttpHead(url);
+                final HttpHead head = new HttpHead(url.toExternalForm());
                 final HttpResponse response = client.execute(head);
 
                 final int statusCode = response.getStatusLine().getStatusCode();
@@ -51,7 +54,8 @@ public abstract class RedirectingUrlResolver implements ShortUrlResolver {
                 if (httpResponseWasRedirect) {
                     final Header locationHeader = response.getFirstHeader(LOCATION);
                     if (locationHeader != null) {
-                        return URLDecoder.decode(locationHeader.getValue(), "UTF-8");
+                        String location = URLDecoder.decode(locationHeader.getValue(), "UTF-8");
+                        return new URL(location);   // TODO exceptions
                     } else {
                         log.warn("No location header seen on response");
                     }
@@ -60,9 +64,7 @@ public abstract class RedirectingUrlResolver implements ShortUrlResolver {
                     log.warn("The http call did not return an expected redirect");
                 }
 
-            } catch (IOException e) {
-                log.error(e);
-            } catch (IllegalArgumentException e) {
+            } catch (IOException | IllegalArgumentException e) {
                 log.error(e);
             }
 

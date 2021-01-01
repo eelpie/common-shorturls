@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.co.eelpieconsulting.common.shorturls.ShortUrlResolver;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -17,17 +18,19 @@ public class CompositeUrlResolver implements ShortUrlResolver {
         this.resolvers = resolvers;
     }
 
-    public boolean isValid(String url) {
+    @Override
+    public boolean isValid(URL url) {
         return resolverFor(url).isPresent();
     }
 
-    public String resolveUrl(String url) {
+    @Override
+    public URL resolveUrl(URL url) {
         return resolveUrl(url, 0);
     }
 
-    private String resolveUrl(String url, int depth) {
+    private URL resolveUrl(URL url, int depth) {
         if (isValid(url) && depth <= 5) {
-            String resolvedUrl = resolveSingleUrl(url);
+            URL resolvedUrl = resolveSingleUrl(url);
             // If the url resolved to a new url
             // which is also resolvable then we have nested shorteners and we should recurse to resolve again
             boolean hasChanged = !url.equals(resolvedUrl);
@@ -41,9 +44,9 @@ public class CompositeUrlResolver implements ShortUrlResolver {
         }
     }
 
-    private String resolveSingleUrl(final String url) {
+    private URL resolveSingleUrl(final URL url) {
         return resolverFor(url).map(resolver -> {
-            String resolvedUrl = resolver.resolveUrl(url);
+            URL resolvedUrl = resolver.resolveUrl(url);
             if (!resolvedUrl.equals(url)) {
                 log.info("Redirected url '" + url + "' resolved to: " + resolvedUrl);
             }
@@ -51,7 +54,7 @@ public class CompositeUrlResolver implements ShortUrlResolver {
         }).orElse(url);
     }
 
-    private Optional<ShortUrlResolver> resolverFor(String url) {
+    private Optional<ShortUrlResolver> resolverFor(URL url) {
         return Arrays.stream(resolvers).filter(resolver -> resolver.isValid(url)).findFirst();
     }
 
