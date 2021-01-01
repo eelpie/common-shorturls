@@ -19,11 +19,10 @@ public class ShortUrlResolverService {
     }
 
     private String fullyResolveUrl(String url, int depth) {
-        depth = depth + 1;
-        while (isResolvable(url) && depth < 5) {
+        while (isResolvable(url) && depth <= 5) {
             String resolvedUrl = resolveSingleUrl(url);
             if (!resolvedUrl.equals(url)) {
-                return fullyResolveUrl(resolvedUrl, depth);
+                return fullyResolveUrl(resolvedUrl, depth + 1);
             }
             return resolvedUrl;
         }
