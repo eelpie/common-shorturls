@@ -21,8 +21,11 @@ public class ShortUrlResolverService {
     private String fullyResolveUrl(String url, int depth) {
         if (isResolvable(url) && depth <= 5) {
             String resolvedUrl = resolveSingleUrl(url);
-            // If the resolved url is also resolvable then we have nested shorteners and we should recurse to resolve again
-            if (isResolvable(resolvedUrl)) {
+
+            // If the url resolved to a new url
+            // which is also resolvable then we have nested shorteners and we should recurse to resolve again
+            boolean hasChanged = !url.equals(resolvedUrl);
+            if (hasChanged && isResolvable(resolvedUrl)) {
                 return fullyResolveUrl(resolvedUrl, depth + 1);
             } else {
                 return resolvedUrl;
