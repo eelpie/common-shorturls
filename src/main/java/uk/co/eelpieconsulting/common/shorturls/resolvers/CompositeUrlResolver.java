@@ -5,33 +5,34 @@ import org.apache.logging.log4j.Logger;
 import uk.co.eelpieconsulting.common.shorturls.ShortUrlResolver;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class CompositeUrlResolver implements ShortUrlResolver {
 
     private final static Logger log = LogManager.getLogger(CompositeUrlResolver.class);
 
-    protected RedirectingUrlResolver[] redirectResolvers;
+    protected ShortUrlResolver[] resolvers;
 
-    public CompositeUrlResolver(RedirectingUrlResolver... redirectResolvers) {
-        this.redirectResolvers = redirectResolvers;
+    public CompositeUrlResolver(ShortUrlResolver... resolvers) {
+        this.resolvers = resolvers;
     }
 
     public boolean isValid(String url) {
-        return Arrays.stream(redirectResolvers).anyMatch(resolver -> resolver.isValid(url));
+        return resolverFor(url).isPresent();
     }
 
     public String resolveUrl(String url) {
-        return fullyResolveUrl(url, 0);
+        return resolveUrl(url, 0);
     }
 
-    private String fullyResolveUrl(String url, int depth) {
+    private String resolveUrl(String url, int depth) {
         if (isValid(url) && depth <= 5) {
             String resolvedUrl = resolveSingleUrl(url);
             // If the url resolved to a new url
             // which is also resolvable then we have nested shorteners and we should recurse to resolve again
             boolean hasChanged = !url.equals(resolvedUrl);
             if (hasChanged) {
-                return fullyResolveUrl(resolvedUrl, depth + 1);
+                return resolveUrl(resolvedUrl, depth + 1);
             } else {
                 return resolvedUrl;
             }
@@ -40,19 +41,18 @@ public class CompositeUrlResolver implements ShortUrlResolver {
         }
     }
 
-    protected String resolveSingleUrl(String url) {
-        for (RedirectingUrlResolver resolver : redirectResolvers) {
-            if (resolver.isValid(url)) {
-                String resolvedUrl = resolver.resolveUrl(url);
-                if (resolvedUrl != null) {
-                    log.info("Redirected url '" + url + "' resolved to: " + resolvedUrl);
-                    url = resolvedUrl;
-                } else {
-                    log.warn("Failed to resolve redirected url: " + url);
-                }
+    private String resolveSingleUrl(final String url) {
+        return resolverFor(url).map(resolver -> {
+            String resolvedUrl = resolver.resolveUrl(url);
+            if (!resolvedUrl.equals(url)) {
+                log.info("Redirected url '" + url + "' resolved to: " + resolvedUrl);
             }
-        }
-        return url;
+            return resolvedUrl;
+        }).orElse(url);
+    }
+
+    private Optional<ShortUrlResolver> resolverFor(String url) {
+        return Arrays.stream(resolvers).filter(resolver -> resolver.isValid(url)).findFirst();
     }
 
 }
