@@ -5,7 +5,7 @@
     <artifactId>common-shorturls</artifactId>
     <packaging>jar</packaging>
     <name>Common short URLs</name>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <description>Resolves nested short URLs</description>
 
     <build>
