@@ -44,7 +44,9 @@ public abstract class RedirectingUrlResolver {
                 final int statusCode = response.getStatusLine().getStatusCode();
                 log.debug("Response status code was: " + statusCode);
 
-                final boolean httpResponseWasRedirect = statusCode == HttpStatus.SC_MOVED_TEMPORARILY || statusCode == HttpStatus.SC_MOVED_PERMANENTLY;
+                final boolean httpResponseWasRedirect = statusCode == HttpStatus.SC_MOVED_TEMPORARILY
+                        || statusCode == HttpStatus.SC_MOVED_PERMANENTLY
+                        || statusCode == 308;
                 if (httpResponseWasRedirect) {
                     final Header locationHeader = response.getFirstHeader(LOCATION);
                     if (locationHeader != null) {
