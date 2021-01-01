@@ -19,19 +19,23 @@ public class ShortUrlResolverService {
     }
 
     private String fullyResolveUrl(String url, int depth) {
-        while (isResolvable(url) && depth <= 5) {
+        if (isResolvable(url) && depth <= 5) {
             String resolvedUrl = resolveSingleUrl(url);
-            if (!resolvedUrl.equals(url)) {
+            // If the resolved url is also resolvable then we have nested shorteners and we should recurse to resolve again
+            if (isResolvable(resolvedUrl)) {
                 return fullyResolveUrl(resolvedUrl, depth + 1);
+            } else {
+                return resolvedUrl;
             }
-            return resolvedUrl;
+        } else {
+            return url;
         }
-        return url;
     }
 
     protected boolean isResolvable(String url) {
         for (RedirectingUrlResolver resolver : redirectResolvers) {
-            if (resolver.isValid(url)) {
+            boolean valid = resolver.isValid(url);
+            if (valid) {
                 return true;
             }
         }
