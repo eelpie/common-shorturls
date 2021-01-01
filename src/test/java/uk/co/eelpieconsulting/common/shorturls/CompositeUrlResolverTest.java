@@ -33,7 +33,7 @@ public class CompositeUrlResolverTest {
 
     @Test
     public void canResolveNestedShortUrls() throws MalformedURLException {
-        CompositeUrlResolver service = new CompositeUrlResolver(new TwitterHttpsShortenerUrlResolver(), new TinyUrlHttpsResolver());
+        CompositeUrlResolver service = new CompositeUrlResolver(new TwitterShortenerUrlResolver(), new TinyUrlResolver());
 
         URL resolvedUrl = service.resolveUrl(new URL("https://t.co/Gl8KhGhCa4?amp=1"));
 

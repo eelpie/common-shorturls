@@ -21,15 +21,15 @@ public abstract class RedirectingUrlResolver implements ShortUrlResolver {
     private static final String LOCATION = "Location";
     private static final int HTTP_TIMEOUT = 10000;
 
-    private final String urlPrefix;
+    private final String domain;
 
-    protected RedirectingUrlResolver(String urlPrefix) {
-        this.urlPrefix = urlPrefix;
+    protected RedirectingUrlResolver(String domain) {
+        this.domain = domain;
     }
 
     @Override
     public boolean isValid(URL url) {
-        return url != null && url.toExternalForm().startsWith(urlPrefix);
+        return url != null && url.getHost().equals(domain);
     }
 
     @Override
