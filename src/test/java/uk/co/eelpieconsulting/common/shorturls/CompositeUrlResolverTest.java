@@ -7,11 +7,11 @@ import org.junit.Test;
 
 import uk.co.eelpieconsulting.common.shorturls.resolvers.*;
 
-public class ShortUrlResolverServiceTest {
+public class CompositeUrlResolverTest {
 
     @Test
     public void canResolveSingleLevelShortUrl() {
-        ShortUrlResolverService service = new ShortUrlResolverService(new FeedBurnerRedirectResolver());
+        CompositeUrlResolver service = new CompositeUrlResolver(new FeedBurnerRedirectResolver());
 
         String resolvedUrl = service.resolveUrl("http://feedproxy.google.com/~r/wellynews/~3/yGwOxeMzH68/09_04_29.htm");
 
@@ -21,7 +21,7 @@ public class ShortUrlResolverServiceTest {
 
     @Test
     public void canResolveNestedShortUrls() {
-        ShortUrlResolverService service = new ShortUrlResolverService(new TwitterHttpsShortenerUrlResolver(), new TinyUrlHttpsResolver());
+        CompositeUrlResolver service = new CompositeUrlResolver(new TwitterHttpsShortenerUrlResolver(), new TinyUrlHttpsResolver());
 
         String resolvedUrl = service.resolveUrl("https://t.co/Gl8KhGhCa4?amp=1");
 

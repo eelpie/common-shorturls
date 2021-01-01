@@ -8,11 +8,12 @@ import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import uk.co.eelpieconsulting.common.shorturls.ShortUrlResolver;
 
 import java.io.IOException;
 import java.net.URLDecoder;
 
-public abstract class RedirectingUrlResolver {
+public abstract class RedirectingUrlResolver implements ShortUrlResolver {
 
     private final static Logger log = LogManager.getLogger(RedirectingUrlResolver.class);
 

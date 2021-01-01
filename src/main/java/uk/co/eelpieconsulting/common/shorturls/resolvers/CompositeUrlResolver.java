@@ -1,41 +1,20 @@
-package uk.co.eelpieconsulting.common.shorturls;
+package uk.co.eelpieconsulting.common.shorturls.resolvers;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.co.eelpieconsulting.common.shorturls.resolvers.RedirectingUrlResolver;
+import uk.co.eelpieconsulting.common.shorturls.ShortUrlResolver;
 
-public class ShortUrlResolverService {
+public class CompositeUrlResolver implements ShortUrlResolver {
 
-    private final static Logger log = LogManager.getLogger(ShortUrlResolverService.class);
+    private final static Logger log = LogManager.getLogger(CompositeUrlResolver.class);
 
     protected RedirectingUrlResolver[] redirectResolvers;
 
-    public ShortUrlResolverService(RedirectingUrlResolver... redirectResolvers) {
+    public CompositeUrlResolver(RedirectingUrlResolver... redirectResolvers) {
         this.redirectResolvers = redirectResolvers;
     }
 
-    public String resolveUrl(String url) {
-        return fullyResolveUrl(url, 0);
-    }
-
-    private String fullyResolveUrl(String url, int depth) {
-        if (isResolvable(url) && depth <= 5) {
-            String resolvedUrl = resolveSingleUrl(url);
-
-            // If the url resolved to a new url
-            // which is also resolvable then we have nested shorteners and we should recurse to resolve again
-            boolean hasChanged = !url.equals(resolvedUrl);
-            if (hasChanged && isResolvable(resolvedUrl)) {
-                return fullyResolveUrl(resolvedUrl, depth + 1);
-            } else {
-                return resolvedUrl;
-            }
-        } else {
-            return url;
-        }
-    }
-
-    protected boolean isResolvable(String url) {
+    public boolean isValid(String url) {
         for (RedirectingUrlResolver resolver : redirectResolvers) {
             boolean valid = resolver.isValid(url);
             if (valid) {
@@ -43,6 +22,27 @@ public class ShortUrlResolverService {
             }
         }
         return false;
+    }
+
+    public String resolveUrl(String url) {
+        return fullyResolveUrl(url, 0);
+    }
+
+    private String fullyResolveUrl(String url, int depth) {
+        if (isValid(url) && depth <= 5) {
+            String resolvedUrl = resolveSingleUrl(url);
+
+            // If the url resolved to a new url
+            // which is also resolvable then we have nested shorteners and we should recurse to resolve again
+            boolean hasChanged = !url.equals(resolvedUrl);
+            if (hasChanged && isValid(resolvedUrl)) {
+                return fullyResolveUrl(resolvedUrl, depth + 1);
+            } else {
+                return resolvedUrl;
+            }
+        } else {
+            return url;
+        }
     }
 
     protected String resolveSingleUrl(String url) {
