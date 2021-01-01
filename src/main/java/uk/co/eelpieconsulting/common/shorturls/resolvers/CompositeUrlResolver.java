@@ -31,11 +31,10 @@ public class CompositeUrlResolver implements ShortUrlResolver {
     private String fullyResolveUrl(String url, int depth) {
         if (isValid(url) && depth <= 5) {
             String resolvedUrl = resolveSingleUrl(url);
-
             // If the url resolved to a new url
             // which is also resolvable then we have nested shorteners and we should recurse to resolve again
             boolean hasChanged = !url.equals(resolvedUrl);
-            if (hasChanged && isValid(resolvedUrl)) {
+            if (hasChanged) {
                 return fullyResolveUrl(resolvedUrl, depth + 1);
             } else {
                 return resolvedUrl;
