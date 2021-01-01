@@ -1,13 +1,22 @@
 package uk.co.eelpieconsulting.common.shorturls;
 
 import static org.junit.Assert.assertEquals;
-
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import uk.co.eelpieconsulting.common.shorturls.resolvers.*;
 
 public class CompositeUrlResolverTest {
+
+    @Test
+    public void canDetectValidResolvers() {
+        CompositeUrlResolver service = new CompositeUrlResolver(new FeedBurnerRedirectResolver(), new TinyUrlResolver());
+
+        assertTrue(service.isValid("http://tinyurl.com/123"));
+        assertFalse(service.isValid("http://wellington.gen.nz"));
+    }
 
     @Test
     public void canResolveSingleLevelShortUrl() {

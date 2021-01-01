@@ -4,6 +4,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.co.eelpieconsulting.common.shorturls.ShortUrlResolver;
 
+import java.util.Arrays;
+
 public class CompositeUrlResolver implements ShortUrlResolver {
 
     private final static Logger log = LogManager.getLogger(CompositeUrlResolver.class);
@@ -15,13 +17,7 @@ public class CompositeUrlResolver implements ShortUrlResolver {
     }
 
     public boolean isValid(String url) {
-        for (RedirectingUrlResolver resolver : redirectResolvers) {
-            boolean valid = resolver.isValid(url);
-            if (valid) {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.stream(redirectResolvers).anyMatch(resolver -> resolver.isValid(url));
     }
 
     public String resolveUrl(String url) {
