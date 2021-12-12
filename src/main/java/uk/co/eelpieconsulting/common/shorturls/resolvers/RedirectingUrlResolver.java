@@ -1,13 +1,13 @@
 package uk.co.eelpieconsulting.common.shorturls.resolvers;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import uk.co.eelpieconsulting.common.shorturls.ShortUrlResolver;
 
 import java.io.IOException;
@@ -16,7 +16,7 @@ import java.net.URLDecoder;
 
 public abstract class RedirectingUrlResolver implements ShortUrlResolver {
 
-    private final static Logger log = LogManager.getLogger(RedirectingUrlResolver.class);
+    private final static Log log = LogFactory.getLog(RedirectingUrlResolver.class);
 
     private static final String LOCATION = "Location";
     private static final int HTTP_TIMEOUT = 10000;

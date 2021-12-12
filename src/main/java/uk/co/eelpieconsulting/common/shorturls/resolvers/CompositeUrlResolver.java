@@ -1,7 +1,7 @@
 package uk.co.eelpieconsulting.common.shorturls.resolvers;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import uk.co.eelpieconsulting.common.shorturls.ShortUrlResolver;
 
 import java.net.URL;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class CompositeUrlResolver implements ShortUrlResolver {
 
-    private final static Logger log = LogManager.getLogger(CompositeUrlResolver.class);
+    private final static Log log = LogFactory.getLog(CompositeUrlResolver.class);
 
     protected ShortUrlResolver[] resolvers;
 
