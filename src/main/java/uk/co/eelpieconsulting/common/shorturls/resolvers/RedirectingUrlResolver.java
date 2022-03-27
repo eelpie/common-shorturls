@@ -11,6 +11,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import uk.co.eelpieconsulting.common.shorturls.ShortUrlResolver;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 
@@ -55,23 +56,31 @@ public abstract class RedirectingUrlResolver implements ShortUrlResolver {
                     final Header locationHeader = response.getFirstHeader(LOCATION);
                     if (locationHeader != null) {
                         String location = URLDecoder.decode(locationHeader.getValue(), "UTF-8");
-                        return new URL(location);   // TODO exceptions
+                        try {
+                            return new URL(location);
+                        } catch (MalformedURLException e) {
+                            log.warn("Returned redirection URL could not be parsed: " + location);
+                            return null;
+                        }
                     } else {
                         log.warn("No location header seen on response");
+                        return null;
                     }
 
                 } else {
                     log.warn("The http call did not return an expected redirect");
+                    return null;
                 }
 
             } catch (IOException | IllegalArgumentException e) {
                 log.error(e);
+                return null;
             }
 
         } else {
-            log.warn("Url was invalid: " + null);
+            log.warn("Url was is supported by this resolver; no resolution attempted: " + url);
+            return url;
         }
-        return null;
     }
 
 }

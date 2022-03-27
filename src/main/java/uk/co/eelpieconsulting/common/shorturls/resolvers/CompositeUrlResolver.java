@@ -31,8 +31,9 @@ public class CompositeUrlResolver implements ShortUrlResolver {
     private URL resolveUrl(URL url, int depth) {
         if (isValid(url) && depth <= 5) {
             URL resolvedUrl = resolveSingleUrl(url);
-            // If the url resolved to a new url
-            // which is also resolvable then we have nested shorteners and we should recurse to resolve again
+            // If the url resolved to a new url which is also resolvable then we have nested shorteners
+            // and should recurse to resolve again.
+            // ie. a tinyurl wrapped by Twitter.
             boolean hasChanged = !url.equals(resolvedUrl);
             if (hasChanged) {
                 return resolveUrl(resolvedUrl, depth + 1);
@@ -47,10 +48,14 @@ public class CompositeUrlResolver implements ShortUrlResolver {
     private URL resolveSingleUrl(final URL url) {
         return resolverFor(url).map(resolver -> {
             URL resolvedUrl = resolver.resolveUrl(url);
-            if (!resolvedUrl.equals(url)) {
-                log.info("Redirected url '" + url + "' resolved to: " + resolvedUrl);
+            if (resolvedUrl != null) {
+                if (!resolvedUrl.equals(url)) {
+                    log.info("Redirected url '" + url + "' resolved to: " + resolvedUrl);
+                }
+                return resolvedUrl;
+            } else {
+                return null;
             }
-            return resolvedUrl;
         }).orElse(url);
     }
 
