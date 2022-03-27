@@ -6,8 +6,9 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpHead;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import uk.co.eelpieconsulting.common.shorturls.ShortUrlResolver;
 
 import java.io.IOException;
@@ -38,9 +39,13 @@ public abstract class RedirectingUrlResolver implements ShortUrlResolver {
         if (url != null && isValid(url)) {
             log.info("Resolving url: " + url);
 
-            final HttpClient client = new DefaultHttpClient();
-            client.getParams().setParameter("http.socket.timeout", HTTP_TIMEOUT);
-            client.getParams().setParameter("http.protocol.handle-redirects", false);
+            RequestConfig requestConfig = RequestConfig.custom()
+                    .setConnectTimeout(HTTP_TIMEOUT)
+                    .setConnectionRequestTimeout(HTTP_TIMEOUT)
+                    .setSocketTimeout(HTTP_TIMEOUT).build();
+
+            HttpClient client = HttpClientBuilder.create().
+                    setDefaultRequestConfig(requestConfig).disableRedirectHandling().build();
 
             try {
                 final HttpHead head = new HttpHead(url.toExternalForm());
