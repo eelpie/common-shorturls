@@ -27,7 +27,7 @@ public class CompositeUrlResolverTest {
 
         URL resolvedUrl = service.resolveUrl(new URL("http://feedproxy.google.com/~r/wellynews/~3/yGwOxeMzH68/09_04_29.htm"));
 
-        assertEquals(new URL("http://www.ccdhb.org.nz/News/2009_archive/09_04_29.htm?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed: wellynews (Search Wellington - Wellington Newslog)"),
+        assertEquals(new URL("http://www.ccdhb.org.nz/News/2009_archive/09_04_29.htm"),
                 resolvedUrl);
     }
 
